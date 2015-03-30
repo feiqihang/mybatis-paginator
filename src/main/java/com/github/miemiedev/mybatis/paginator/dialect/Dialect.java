@@ -24,7 +24,6 @@ public class Dialect {
     protected Object parameterObject;
     protected BoundSql boundSql;
     protected List<ParameterMapping> parameterMappings;
-    protected Map<String, Object> pageParameters = new HashMap<String, Object>();
 
     private String pageSQL;
     private String countSQL;
@@ -41,13 +40,6 @@ public class Dialect {
     protected void init(){
         boundSql = mappedStatement.getBoundSql(parameterObject);
         parameterMappings = new ArrayList(boundSql.getParameterMappings());
-        if(parameterObject instanceof Map){
-            pageParameters.putAll((Map)parameterObject);
-        }else{
-            for (ParameterMapping parameterMapping : parameterMappings) {
-                pageParameters.put(parameterMapping.getProperty(),parameterObject);
-            }
-        }
 
         StringBuffer bufferSql = new StringBuffer(boundSql.getSql().trim());
         if(bufferSql.lastIndexOf(";") == bufferSql.length()-1){
@@ -73,7 +65,7 @@ public class Dialect {
     }
 
     public Object getParameterObject(){
-        return pageParameters;
+        return parameterObject;
     }
 
 
@@ -84,7 +76,6 @@ public class Dialect {
     protected void setPageParameter(String name, Object value, Class type){
         ParameterMapping parameterMapping = new ParameterMapping.Builder(mappedStatement.getConfiguration(), name, type).build();
         parameterMappings.add(parameterMapping);
-        pageParameters.put(name, value);
     }
 
 
