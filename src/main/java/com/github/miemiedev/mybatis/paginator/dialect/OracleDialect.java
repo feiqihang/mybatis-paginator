@@ -30,13 +30,10 @@ public class OracleDialect extends Dialect{
 		}
 		pagingSelect.append(sql);
 		if (offset > 0) {
-			pagingSelect.append(" ) row_ ) where rownum_ <= ? and rownum_ > ?");
-            setPageParameter("__offsetEnd",offset+limit,Integer.class);
-            setPageParameter(offsetName,offset,Integer.class);
+			pagingSelect.append(" ) row_ ) where rownum_ <= ").append(offset+limit).append(" and rownum_ > ").append(offset);
 		}
 		else {
-			pagingSelect.append(" ) where rownum <= ?");
-            setPageParameter(limitName,limit,Integer.class);
+			pagingSelect.append(" ) where rownum <= ").append(limit);
 		}
 
 		if ( isForUpdate ) {
